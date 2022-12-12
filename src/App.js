@@ -7,6 +7,8 @@ export const ColorModeContext = React.createContext({
   toggleColorMode: () => {},
 });
 
+import './services/axios/mockAdapter/createMockApis';
+
 function App() {
   const [mode, setMode] = React.useState("light");
   const colorMode = React.useMemo(
