@@ -7,12 +7,15 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import Button from "@mui/material/Button";
+import { useTheme } from "@mui/material/styles";
 import {
   createColumnHelper,
   flexRender,
   useReactTable,
   getCoreRowModel,
 } from "@tanstack/react-table";
+import { ColorModeContext } from "../../App";
 
 const defaultData = [
   {
@@ -80,6 +83,8 @@ const columns = [
 ];
 
 const CustomTable = () => {
+  const theme = useTheme();
+  const colorMode = React.useContext(ColorModeContext);
   const [data, setData] = React.useState(() => [...defaultData]);
 
   const table = useReactTable({
@@ -89,7 +94,14 @@ const CustomTable = () => {
   });
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box sx={{ width: "100%", textAlign: "end" }}>
+      <Button
+        sx={{ margin: "10px" }}
+        onClick={colorMode.toggleColorMode}
+        variant="contained"
+      >
+        {theme.palette.mode === "dark" ? "light" : "dark"}
+      </Button>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
