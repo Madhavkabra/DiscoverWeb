@@ -8,6 +8,9 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import PushPinIcon from "@mui/icons-material/PushPin";
+import CancelIcon from "@mui/icons-material/Cancel";
 import { useTheme } from "@mui/material/styles";
 import {
   createColumnHelper,
@@ -86,11 +89,16 @@ const CustomTable = () => {
   const theme = useTheme();
   const colorMode = React.useContext(ColorModeContext);
   const [data, setData] = React.useState(() => [...defaultData]);
+  const [columnPinning, setColumnPinning] = React.useState({});
 
   const table = useReactTable({
     data,
     columns,
+    state: {
+      columnPinning,
+    },
     getCoreRowModel: getCoreRowModel(),
+    onColumnPinningChange: setColumnPinning,
   });
 
   return (
@@ -116,6 +124,27 @@ const CustomTable = () => {
                             header.column.columnDef.header,
                             header.getContext()
                           )}
+                      {!header.isPlaceholder && header.column.getCanPin() && (
+                        <div style={{ display: "inline" }}>
+                          {!header.column.getIsPinned() ? (
+                            <IconButton
+                              onClick={() => {
+                                header.column.pin("left");
+                              }}
+                            >
+                              <PushPinIcon sx={{ width: "20px" }} />
+                            </IconButton>
+                          ) : (
+                            <IconButton
+                              onClick={() => {
+                                header.column.pin(false);
+                              }}
+                            >
+                              <CancelIcon sx={{ width: "20px" }} />
+                            </IconButton>
+                          )}
+                        </div>
+                      )}
                     </TableCell>
                   );
                 })}
