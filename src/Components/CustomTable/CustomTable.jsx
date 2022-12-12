@@ -15,6 +15,8 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useTheme } from "@mui/material/styles";
 import {
@@ -97,14 +99,6 @@ const CustomTable = () => {
 
   return (
     <Box style={{ width: "100%", textAlign: "end" }}>
-      <Button
-        sx={{ margin: "10px" }}
-        onClick={colorMode.toggleColorMode}
-        variant="contained"
-      >
-        {theme.palette.mode === "dark" ? "light" : "dark"}
-      </Button>
-
       <TableContainer component={Paper}>
         <Input
           placeholder="Search"
@@ -116,6 +110,13 @@ const CustomTable = () => {
             </InputAdornment>
           }
         />
+        <IconButton
+          sx={{ margin: "20px" }}
+          onClick={colorMode.toggleColorMode}
+          variant="contained"
+        >
+          {theme.palette.mode === "dark" ? <LightModeIcon /> : <DarkModeIcon />}
+        </IconButton>
         <Box>
           <Table
             sx={{ minWidth: 650, overflow: "scroll" }}
