@@ -1,7 +1,15 @@
 import { request } from '../interceptor';
 
-export const getAllUsers = async () => {
+/**
+ *
+ * @param {number} page active page number
+ * @returns array of users
+ */
+export const getUsers = async (page = 1) => {
   return request({
-    url: '/users',
+    url: `/users`,
+    params: {
+      page,
+    },
   });
 };
