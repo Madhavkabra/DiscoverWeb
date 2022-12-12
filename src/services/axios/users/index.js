@@ -1,3 +1,4 @@
+import { SortingOrder } from '../../../constants/sortingOrder';
 import { request } from '../interceptor';
 
 /**
@@ -10,6 +11,21 @@ export const getUsers = async (page = 1) => {
     url: `/users`,
     params: {
       page,
+    },
+  });
+};
+
+export const getSortedUsersByColumn = async (
+  users,
+  sortBy,
+  sortOrder = SortingOrder.ASCENDING_ORDER
+) => {
+  return request({
+    url: '/sorted-users',
+    params: {
+      users,
+      sortBy,
+      sortOrder,
     },
   });
 };
