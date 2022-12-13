@@ -357,8 +357,10 @@ const CustomTable = () => {
             </TableBody>
           </Table>
         </Box>
-        <div style={{ textAlign: 'initial' }}>Fetched 25 of 200 total rows</div>
       </TableContainer>
+      <div style={{ textAlign: 'initial' }}>
+        Fetched {users.users.length} of {users.totalUsers} total rows
+      </div>
     </Paper>
   );
 };
