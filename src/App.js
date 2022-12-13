@@ -1,20 +1,26 @@
-import "./services/axios/mockAdapter/createMockApis";
-import React, { useState, createContext, useMemo } from "react";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-import TablePage from "./Page/Table.page";
-import "./App.css";
+import './services/axios/mockAdapter/createMockApis';
+import React, { useState, createContext, useMemo } from 'react';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import TablePage from './Page/Table.page';
+
+import { ThemeMode } from './constants/themeMode';
+
+const queryClient = new QueryClient();
 
 export const ColorModeContext = createContext({
   toggleColorMode: () => {},
 });
 
 function App() {
-  const [mode, setMode] = useState("light");
+  const [mode, setMode] = useState(ThemeMode.LIGHT);
 
   const colorMode = useMemo(
     () => ({
       toggleColorMode: () => {
-        setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
+        setMode((prevMode) =>
+          prevMode === ThemeMode.LIGHT ? ThemeMode.DARK : ThemeMode.LIGHT
+        );
       },
     }),
     []
@@ -30,13 +36,13 @@ function App() {
     [mode]
   );
   return (
-    <div className="App">
-      <ColorModeContext.Provider value={colorMode}>
-        <ThemeProvider theme={theme}>
+    <ColorModeContext.Provider value={colorMode}>
+      <ThemeProvider theme={theme}>
+        <QueryClientProvider client={queryClient}>
           <TablePage />
-        </ThemeProvider>
-      </ColorModeContext.Provider>
-    </div>
+        </QueryClientProvider>
+      </ThemeProvider>
+    </ColorModeContext.Provider>
   );
 }
 

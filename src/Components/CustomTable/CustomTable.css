@@ -1,0 +1,33 @@
+table {
+  border: 0.5px solid #e0e0e0;
+  overflow-x: scroll;
+  position: relative;
+  position: -webkit-relative;
+  overflow: auto;
+  z-index: 0;
+}
+
+th {
+  border-bottom: 0.5px solid #e0e0e0;
+  border-right: 0.5px solid #e0e0e0;
+  padding: 2px 4px;
+  position: sticky;
+  position: -webkit-sticky;
+}
+
+td {
+  border-bottom: 0.5px solid #e0e0e0;
+  border-right: 0.5px solid #e0e0e0;
+}
+td:nth-child(1) {
+  background-color: red;
+  position: sticky;
+  position: -webkit-sticky;
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+  z-index: 2;
+}
+tfoot {
+  color: gray;
+}
