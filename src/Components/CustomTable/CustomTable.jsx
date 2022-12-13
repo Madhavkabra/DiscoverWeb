@@ -4,6 +4,7 @@ import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
+import TableSortLabel from "@mui/material/TableSortLabel";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
@@ -18,6 +19,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { visuallyHidden } from "@mui/utils";
 import { useTheme } from "@mui/material/styles";
 import {
   createColumnHelper,
@@ -27,7 +31,11 @@ import {
   getSortedRowModel,
 } from "@tanstack/react-table";
 import { ColorModeContext } from "../../App";
-import { getUsers } from "../../services/axios/users";
+import {
+  getGlobalSearchedUsers,
+  getUsers,
+  getSearchedUsersByColumn,
+} from "../../services/axios/users";
 
 const columnHelper = createColumnHelper();
 const columns = [
@@ -93,6 +101,18 @@ const CustomTable = () => {
     debugTable: true,
   });
 
+  const handleColumnFilterChange = async (name, value) => {
+    if (value) {
+      if (name === "globalSearch") {
+        const globalSearch = await getGlobalSearchedUsers(value, 2);
+        setData(globalSearch.users);
+      } else {
+        const searchData = await getSearchedUsersByColumn(name, value);
+        setData(searchData.users);
+      }
+    }
+  };
+
   useEffect(() => {
     getData();
   }, []);
@@ -102,6 +122,10 @@ const CustomTable = () => {
       <TableContainer component={Paper}>
         <Input
           placeholder="Search"
+          name="globalSearch"
+          onChange={(e) =>
+            handleColumnFilterChange(e.target.name, e.target.value)
+          }
           startAdornment={
             <InputAdornment position="end">
               <IconButton size="small">
@@ -161,6 +185,13 @@ const CustomTable = () => {
                         {header.id !== "id" && (
                           <Input
                             placeholder={`Filter by ${header.column.columnDef.header}`}
+                            name={`${header.id}`}
+                            onChange={(e) =>
+                              handleColumnFilterChange(
+                                e.target.name,
+                                e.target.value
+                              )
+                            }
                             endAdornment={
                               <InputAdornment position="end">
                                 <IconButton size="small">
