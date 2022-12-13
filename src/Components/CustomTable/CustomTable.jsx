@@ -89,36 +89,6 @@ const CustomTable = () => {
             header: 'Phone Number',
             footer: (info) => info.column.id,
           }),
-          columnHelper.accessor('phone', {
-            id: 'phone',
-            header: 'Phone Number',
-            footer: (info) => info.column.id,
-          }),
-          columnHelper.accessor('phone', {
-            id: 'phone',
-            header: 'Phone Number',
-            footer: (info) => info.column.id,
-          }),
-          columnHelper.accessor('phone', {
-            id: 'phone',
-            header: 'Phone Number',
-            footer: (info) => info.column.id,
-          }),
-          columnHelper.accessor('phone', {
-            id: 'phone',
-            header: 'Phone Number',
-            footer: (info) => info.column.id,
-          }),
-          columnHelper.accessor('email', {
-            id: 'email',
-            header: 'Email',
-            footer: (info) => info.column.id,
-          }),
-          columnHelper.accessor('email', {
-            id: 'email',
-            header: 'Email',
-            footer: (info) => info.column.id,
-          }),
           columnHelper.accessor('email', {
             id: 'email',
             header: 'Email',
@@ -126,21 +96,6 @@ const CustomTable = () => {
           }),
         ],
       },
-      columnHelper.accessor('email', {
-        id: 'email',
-        header: 'Email',
-        footer: (info) => info.column.id,
-      }),
-      columnHelper.accessor('email', {
-        id: 'email',
-        header: 'Email',
-        footer: (info) => info.column.id,
-      }),
-      columnHelper.accessor('email', {
-        id: 'email',
-        header: 'Email',
-        footer: (info) => info.column.id,
-      }),
     ],
     []
   );
@@ -254,11 +209,10 @@ const CustomTable = () => {
           <Table
             sx={{ minWidth: 650, overflow: 'scroll' }}
             aria-label='simple table'
-            // stickyHeader
           >
             <TableHead>
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id} stickyHeader>
+                <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
                     return (
                       <TableCell
