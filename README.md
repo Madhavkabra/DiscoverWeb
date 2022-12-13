@@ -1,70 +1,51 @@
-# Getting Started with Create React App
+# Discovery Web Test Task
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Instructions to run the application
 
-In the project directory, you can run:
+Open a terminal/command-prompt In the application's directory,
 
-### `npm start`
+1. Run `npm install` to install all required dependencies
+2. Run `npm start` This will run application in development mode. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## The libraries, which is used
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. `@mui/material`: Use to manage theme mode and create customizable components.
+2. `@mui/icons-material`: To use material icons component.
+3. `@tanstack/react-table`: To create a table component.
+4. `@tanstack/react-query`: To fetch table data by infinite scoll
+5. `axios-mock-adapter`: To create mock API
+6. `axios`: To call API
 
-### `npm test`
+## What is covered
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Dark/Light Mode
+2. Filter for each column
+3. Global search throughout the table
+4. Ascending & Descending Sort for each column
+5. Infinite Scrolling mechanism
+6. Header Column Spanning
+7. Header Row Spanning
+8. Cell Column Spanning
+9. Cell Row Spanning
+10. Column Pinning
 
-### `npm run build`
+## What is not covered
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Sticky UI
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+   - When pin the column and scroll horizantally(if more columns available), all the columns(pinned as well) are scrolling.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. Display column data in a different column when a specific column is not visible
+   - This is not availabe by default as a feature in table library which you shared.
+   - The approach to achive this:
+     We can achive this by creating a local variable and store the column C values in it, initially.When scroll the column H and it not visible to users we replace column C's values with column H's values and when column H will be visible, undo the column C value from local variable.
 
-### `npm run eject`
+## Code structure
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+1. the Main file of the project is `src/index.js`
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Extra things
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. Remove menu icon(three dot) button from table header, because there is no use of this button and also UI is not looking good.
