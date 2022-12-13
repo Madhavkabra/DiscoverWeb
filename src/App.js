@@ -1,7 +1,7 @@
 import './services/axios/mockAdapter/createMockApis';
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import TablePage from './Page/Table.page';
+import TablePage from './pages/Table';
 
 import { ThemeContextProvider } from './contexts/muiThemeProvider';
 
