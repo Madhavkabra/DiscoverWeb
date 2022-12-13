@@ -15,8 +15,6 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
-
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {
   createColumnHelper,
   flexRender,
@@ -169,6 +167,12 @@ const CustomTable = () => {
     setUsers(sortedColumn);
   };
 
+  const handleClearFilter = async () => {
+    const fetchedData = await getUsers(1, isGlobalSearch, '', '');
+    setUsers(fetchedData);
+    setSearchText('');
+  };
+
   return (
     <Paper style={{ width: '100%', textAlign: 'end' }}>
       <Input
@@ -206,7 +210,7 @@ const CustomTable = () => {
                         key={header.id}
                         sortDirection={orderBy === header.id ? order : false}
                         colSpan={header.colSpan}
-                        sx={{ textAlign: 'center' }}
+                        sx={{ textAlign: 'left' }}
                       >
                         <div style={{ position: 'sticky' }}>
                           {header.isPlaceholder
@@ -217,9 +221,6 @@ const CustomTable = () => {
                               )}
                           {header.column.parent && (
                             <>
-                              <IconButton size='small'>
-                                <MoreVertIcon />
-                              </IconButton>
                               {!header.isPlaceholder &&
                                 header.column.getCanPin() && (
                                   <div style={{ display: 'inline' }}>
@@ -242,10 +243,20 @@ const CustomTable = () => {
                                     )}
                                   </div>
                                 )}
+                              <TableSortLabel
+                                active={orderBy === header.id}
+                                direction={order}
+                                onClick={() => handleSort(header.id)}
+                              />
                               {header.id !== 'id' && (
                                 <Input
                                   placeholder={`Filter by ${header.column.columnDef.header}`}
                                   name={`${header.id}`}
+                                  value={
+                                    searchColumnName === header.id && searchText
+                                      ? searchText
+                                      : ''
+                                  }
                                   onChange={(e) =>
                                     handleColumnFilterChange(
                                       e.target.name,
@@ -254,18 +265,16 @@ const CustomTable = () => {
                                   }
                                   endAdornment={
                                     <InputAdornment position='end'>
-                                      <IconButton size='small'>
+                                      <IconButton
+                                        size='small'
+                                        onClick={() => handleClearFilter()}
+                                      >
                                         <CloseIcon />
                                       </IconButton>
                                     </InputAdornment>
                                   }
                                 />
                               )}
-                              <TableSortLabel
-                                active={orderBy === header.id}
-                                direction={order}
-                                onClick={() => handleSort(header.id)}
-                              ></TableSortLabel>
                             </>
                           )}
                         </div>
