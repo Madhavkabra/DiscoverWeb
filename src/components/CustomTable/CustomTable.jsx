@@ -44,10 +44,12 @@ const CustomTable = () => {
 
   const columns = useMemo(
     () => [
-      columnHelper.accessor('sr_No', {
-        id: 'sr_No',
-        header: '#',
-      }),
+      {
+        ...columnHelper.accessor('sr_No', {
+          id: 'sr_No',
+          header: '#',
+        }),
+      },
       {
         header: 'Name',
         footer: (props) => props.column.id,
@@ -206,10 +208,19 @@ const CustomTable = () => {
             aria-label='simple table'
           >
             <TableHead>
-              {table.getHeaderGroups().map((headerGroup) => (
+              {table.getHeaderGroups().map((headerGroup, headerGroupIndex) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
+                    console.log({ headerGroup });
+
                     if (header.id === 'sr_No') {
+                      return null;
+                    }
+
+                    if (
+                      header.id === '1_sr_No_sr_No' &&
+                      headerGroupIndex === 0
+                    ) {
                       return (
                         <>
                           <TableCell
@@ -217,6 +228,7 @@ const CustomTable = () => {
                             sortDirection={
                               orderBy === header.id ? order : false
                             }
+                            rowSpan={headerGroupIndex === 0 && 2}
                             sx={{ textAlign: 'left' }}
                           >
                             {flexRender(
