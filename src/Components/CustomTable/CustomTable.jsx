@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -34,42 +34,6 @@ import {
 } from '../../services/axios/users';
 
 const columnHelper = createColumnHelper();
-const columns = [
-  columnHelper.accessor('id', {
-    header: '#',
-    id: 'id',
-    cell: (info) => info.getValue(),
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor('firstName', {
-    id: 'firstName',
-    header: 'First Name',
-    cell: (info) => info.getValue(),
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor((row) => row.lastName, {
-    id: 'lastName',
-    header: 'Last Name',
-    cell: (info) => <i>{info.getValue()}</i>,
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor('address', {
-    id: 'address',
-    header: 'Address',
-    cell: (info) => info.renderValue(),
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor('state', {
-    id: 'state',
-    header: 'State',
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor('phone', {
-    id: 'phone',
-    header: 'Phone Number',
-    footer: (info) => info.column.id,
-  }),
-];
 
 const CustomTable = () => {
   const theme = useTheme();
@@ -78,6 +42,52 @@ const CustomTable = () => {
   const [columnPinning, setColumnPinning] = React.useState({});
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('');
+
+  const columns = useMemo(
+    () => [
+      {
+        header: 'Name',
+        footer: (props) => props.column.id,
+        columns: [
+          columnHelper.accessor('firstName', {
+            id: 'firstName',
+            header: 'First Name',
+            cell: (info) => info.getValue(),
+            footer: (info) => info.column.id,
+          }),
+          columnHelper.accessor((row) => row.lastName, {
+            id: 'lastName',
+            header: 'Last Name',
+            cell: (info) => <i>{info.getValue()}</i>,
+            footer: (info) => info.column.id,
+          }),
+        ],
+      },
+      {
+        header: 'Info',
+        footer: (props) => props.column.id,
+        columns: [
+          columnHelper.accessor('address', {
+            id: 'address',
+            header: 'Address',
+            cell: (info) => info.renderValue(),
+            footer: (info) => info.column.id,
+          }),
+          columnHelper.accessor('state', {
+            id: 'state',
+            header: 'State',
+            footer: (info) => info.column.id,
+          }),
+          columnHelper.accessor('phone', {
+            id: 'phone',
+            header: 'Phone Number',
+            footer: (info) => info.column.id,
+          }),
+        ],
+      },
+    ],
+    []
+  );
 
   const getData = async () => {
     const user = await getUsers(1);
@@ -155,10 +165,13 @@ const CustomTable = () => {
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
+                    console.log('header', header);
                     return (
                       <TableCell
                         key={header.id}
                         sortDirection={orderBy === header.id ? order : false}
+                        colSpan={header.colSpan}
+                        sx={{ textAlign: 'center' }}
                       >
                         {header.isPlaceholder
                           ? null
@@ -166,55 +179,59 @@ const CustomTable = () => {
                               header.column.columnDef.header,
                               header.getContext()
                             )}
-                        <IconButton size='small'>
-                          <MoreVertIcon />
-                        </IconButton>
-                        {!header.isPlaceholder && header.column.getCanPin() && (
-                          <div style={{ display: 'inline' }}>
-                            {!header.column.getIsPinned() ? (
-                              <IconButton
-                                onClick={() => {
-                                  header.column.pin('left');
-                                }}
-                              >
-                                <PushPinIcon sx={{ width: '20px' }} />
-                              </IconButton>
-                            ) : (
-                              <IconButton
-                                onClick={() => {
-                                  header.column.pin(false);
-                                }}
-                              >
-                                <CancelIcon sx={{ width: '20px' }} />
-                              </IconButton>
+                        {header.column.parent && (
+                          <>
+                            <IconButton size='small'>
+                              <MoreVertIcon />
+                            </IconButton>
+                            {!header.isPlaceholder &&
+                              header.column.getCanPin() && (
+                                <div style={{ display: 'inline' }}>
+                                  {!header.column.getIsPinned() ? (
+                                    <IconButton
+                                      onClick={() => {
+                                        header.column.pin('left');
+                                      }}
+                                    >
+                                      <PushPinIcon sx={{ width: '20px' }} />
+                                    </IconButton>
+                                  ) : (
+                                    <IconButton
+                                      onClick={() => {
+                                        header.column.pin(false);
+                                      }}
+                                    >
+                                      <CancelIcon sx={{ width: '20px' }} />
+                                    </IconButton>
+                                  )}
+                                </div>
+                              )}
+                            {header.id !== 'id' && (
+                              <Input
+                                placeholder={`Filter by ${header.column.columnDef.header}`}
+                                name={`${header.id}`}
+                                onChange={(e) =>
+                                  handleColumnFilterChange(
+                                    e.target.name,
+                                    e.target.value
+                                  )
+                                }
+                                endAdornment={
+                                  <InputAdornment position='end'>
+                                    <IconButton size='small'>
+                                      <CloseIcon />
+                                    </IconButton>
+                                  </InputAdornment>
+                                }
+                              />
                             )}
-                          </div>
+                            <TableSortLabel
+                              active={orderBy === header.id}
+                              direction={order}
+                              onClick={() => handleSort(header.id)}
+                            ></TableSortLabel>
+                          </>
                         )}
-                        {header.id !== 'id' && (
-                          <Input
-                            placeholder={`Filter by ${header.column.columnDef.header}`}
-                            name={`${header.id}`}
-                            onChange={(e) =>
-                              handleColumnFilterChange(
-                                e.target.name,
-                                e.target.value
-                              )
-                            }
-                            endAdornment={
-                              <InputAdornment position='end'>
-                                <IconButton size='small'>
-                                  <CloseIcon />
-                                </IconButton>
-                              </InputAdornment>
-                            }
-                          />
-                        )}
-
-                        <TableSortLabel
-                          active={orderBy === header.id}
-                          direction={order}
-                          onClick={() => handleSort(header.id)}
-                        ></TableSortLabel>
                       </TableCell>
                     );
                   })}
