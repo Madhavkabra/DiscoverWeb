@@ -44,6 +44,10 @@ const CustomTable = () => {
 
   const columns = useMemo(
     () => [
+      columnHelper.accessor('sr_No', {
+        id: 'sr_No',
+        header: '#',
+      }),
       {
         header: 'Name',
         footer: (props) => props.column.id,
@@ -205,6 +209,24 @@ const CustomTable = () => {
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
+                    if (header.id === 'sr_No') {
+                      return (
+                        <>
+                          <TableCell
+                            key={header.id}
+                            sortDirection={
+                              orderBy === header.id ? order : false
+                            }
+                            sx={{ textAlign: 'left' }}
+                          >
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                          </TableCell>
+                        </>
+                      );
+                    }
                     return (
                       <TableCell
                         key={header.id}
@@ -285,21 +307,22 @@ const CustomTable = () => {
               ))}
             </TableHead>
             <TableBody>
-              {table.getRowModel().rows.map((row) => {
+              {table.getRowModel().rows.map((row, index) => {
                 return (
                   <TableRow key={row.id}>
                     {row
                       .getVisibleCells()
-                      .map(
-                        (cell) =>
-                          cell.column.id !== 'id' && (
-                            <TableCell key={cell.id}>
-                              {flexRender(
-                                cell.column.columnDef.cell,
-                                cell.getContext()
-                              )}
-                            </TableCell>
-                          )
+                      .map((cell) =>
+                        cell.column.id === 'sr_No' ? (
+                          <TableCell>{index + 1}</TableCell>
+                        ) : (
+                          <TableCell key={cell.id}>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </TableCell>
+                        )
                       )}
                   </TableRow>
                 );
