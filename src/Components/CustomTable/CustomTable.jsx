@@ -155,7 +155,7 @@ const CustomTable = () => {
       order.toUpperCase()
     );
     setOrderBy(columnName);
-    setUsers(sortedColumn.users);
+    setUsers(sortedColumn);
   };
 
   return (
