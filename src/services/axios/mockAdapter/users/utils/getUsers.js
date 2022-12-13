@@ -29,7 +29,7 @@ export const getUsers = (config) => {
   } else if (users?.length && sortBy) {
     // Execute When request for sort columns
     data.users = getSortedUsers(users, sortBy, sortOrder);
-  } else if (searchColumn && searchText) {
+  } else if ((searchColumn || globalSearch) && searchText) {
     // Execute when request for global/column search
     const searchedUsers = getSearchedUsers(
       page,
