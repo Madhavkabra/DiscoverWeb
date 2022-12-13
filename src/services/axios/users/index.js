@@ -4,11 +4,19 @@ import { request } from '../interceptor';
 /**
  *
  * @param {number} page active page number
+ * @param {boolean} globalSearch True, if search from global search input
+ * @param {string} searchColumn column name in which search
+ * @param {string} searchText  input text
  * @returns array of users
  */
-export const getUsers = async (page = 1) => {
+export const getUsers = async (
+  page,
+  globalSearch,
+  searchColumn,
+  searchText
+) => {
   return request({
-    url: `/users?page=${page}`,
+    url: `/users?page=${page}&globalSearch=${globalSearch}&searchColumn=${searchColumn}&searchText=${searchText}`,
   });
 };
 

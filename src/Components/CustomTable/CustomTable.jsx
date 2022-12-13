@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -44,6 +44,9 @@ const CustomTable = () => {
   const [columnPinning, setColumnPinning] = React.useState({});
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('');
+  const [searchText, setSearchText] = useState('');
+  const [searchColumnName, setSearchColumnName] = useState('');
+  const [isGlobalSearch, setIsGlobalSearch] = useState(false);
   const tableContainerRef = React.useRef(null);
 
   const columns = useMemo(
@@ -145,7 +148,12 @@ const CustomTable = () => {
   const { fetchNextPage, isFetching } = useInfiniteQuery(
     ['table-data', 'ASCE'],
     async ({ pageParam }) => {
-      const fetchedData = await getUsers(pageParam);
+      const fetchedData = await getUsers(
+        pageParam,
+        isGlobalSearch,
+        searchColumnName,
+        searchText
+      );
       setUsers(fetchedData);
     },
     {
@@ -188,10 +196,14 @@ const CustomTable = () => {
 
   const handleColumnFilterChange = async (name, value) => {
     if (value) {
+      setSearchText(value);
+      setSearchColumnName(name);
       if (name === 'globalSearch') {
+        setIsGlobalSearch(true);
         const globalSearch = await getGlobalSearchedUsers(value, 2);
         setUsers(globalSearch);
       } else {
+        setIsGlobalSearch(false);
         const searchData = await getSearchedUsersByColumn(name, value);
         setUsers(searchData);
       }

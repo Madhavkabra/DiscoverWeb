@@ -36,7 +36,7 @@ export const getUsers = (config) => {
       page,
       searchColumn,
       searchText,
-      globalSearch
+      JSON.parse(globalSearch)
     );
 
     data.users = searchedUsers.users;
