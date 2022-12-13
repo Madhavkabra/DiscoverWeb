@@ -25,6 +25,7 @@ import {
   useReactTable,
   getCoreRowModel,
 } from '@tanstack/react-table';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { ColorModeContext } from '../../App';
 import {
   getGlobalSearchedUsers,
@@ -38,10 +39,11 @@ const columnHelper = createColumnHelper();
 const CustomTable = () => {
   const theme = useTheme();
   const colorMode = React.useContext(ColorModeContext);
-  const [data, setData] = React.useState([]);
+  const [users, setUsers] = React.useState({ users: [], totalUsers: 0 });
   const [columnPinning, setColumnPinning] = React.useState({});
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('');
+  const tableContainerRef = React.useRef(null);
 
   const columns = useMemo(
     () => [
@@ -89,13 +91,41 @@ const CustomTable = () => {
     []
   );
 
-  const getData = async () => {
-    const user = await getUsers(1);
-    setData(user.users);
-  };
+  const { fetchNextPage, isFetching } = useInfiniteQuery(
+    ['table-data', 'ASCE'],
+    async ({ pageParam }) => {
+      const fetchedData = await getUsers(pageParam);
+      setUsers(fetchedData);
+    },
+    {
+      getNextPageParam: (_lastGroup, groups) => groups.length,
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  const fetchMoreOnBottomReached = React.useCallback(
+    (containerRefElement) => {
+      if (containerRefElement) {
+        const { scrollHeight, scrollTop, clientHeight } = containerRefElement;
+        //once the user has scrolled within 10px of the bottom of the table, fetch more data if there is any
+        if (
+          scrollHeight - scrollTop - clientHeight < 10 &&
+          !isFetching &&
+          users.users.length < users.totalUsers
+        ) {
+          fetchNextPage();
+        }
+      }
+    },
+    [fetchNextPage, isFetching, users]
+  );
+
+  useEffect(() => {
+    fetchMoreOnBottomReached(tableContainerRef.current);
+  }, [fetchMoreOnBottomReached]);
 
   const table = useReactTable({
-    data,
+    data: users.users,
     columns,
     state: {
       columnPinning,
@@ -109,10 +139,10 @@ const CustomTable = () => {
     if (value) {
       if (name === 'globalSearch') {
         const globalSearch = await getGlobalSearchedUsers(value, 2);
-        setData(globalSearch.users);
+        setUsers(globalSearch);
       } else {
         const searchData = await getSearchedUsersByColumn(name, value);
-        setData(searchData.users);
+        setUsers(searchData);
       }
     }
   };
@@ -120,21 +150,22 @@ const CustomTable = () => {
   const handleSort = async (columnName) => {
     setOrder(order === 'asc' ? 'desc' : 'asc');
     const sortedColumn = await getSortedUsersByColumn(
-      JSON.stringify(data),
+      JSON.stringify(users.users),
       columnName,
       order.toUpperCase()
     );
     setOrderBy(columnName);
-    setData(sortedColumn.users);
+    setUsers(sortedColumn.users);
   };
-
-  useEffect(() => {
-    getData();
-  }, []);
 
   return (
     <Box style={{ width: '100%', textAlign: 'end' }}>
-      <TableContainer component={Paper}>
+      <TableContainer
+        ref={tableContainerRef}
+        onScroll={(e) => fetchMoreOnBottomReached(e.target)}
+        component={Paper}
+        sx={{ height: '650px' }}
+      >
         <Input
           placeholder='Search'
           name='globalSearch'
@@ -165,7 +196,6 @@ const CustomTable = () => {
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
-                    console.log('header', header);
                     return (
                       <TableCell
                         key={header.id}
