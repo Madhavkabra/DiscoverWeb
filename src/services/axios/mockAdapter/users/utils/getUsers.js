@@ -30,7 +30,7 @@ export const getUsers = (config) => {
     // Execute When request for sort columns
     data.users = getSortedUsers(users, sortBy, sortOrder);
     data.totalUsers = users.length;
-  } else if ((searchColumn || globalSearch) && searchText) {
+  } else if (searchColumn || globalSearch) {
     // Execute when request for global/column search
     const searchedUsers = getSearchedUsers(
       page,

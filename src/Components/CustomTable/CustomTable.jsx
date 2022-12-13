@@ -150,18 +150,16 @@ const CustomTable = () => {
   });
 
   const handleColumnFilterChange = async (name, value) => {
-    if (value) {
-      setSearchText(value);
-      setSearchColumnName(name);
-      if (name === 'globalSearch') {
-        setIsGlobalSearch(true);
-        const globalSearch = await getGlobalSearchedUsers(value, 2);
-        setUsers(globalSearch);
-      } else {
-        setIsGlobalSearch(false);
-        const searchData = await getSearchedUsersByColumn(name, value);
-        setUsers(searchData);
-      }
+    setSearchText(value);
+    setSearchColumnName(name);
+    if (name === 'globalSearch') {
+      setIsGlobalSearch(true);
+      const globalSearch = await getGlobalSearchedUsers(value, 2);
+      setUsers(globalSearch);
+    } else {
+      setIsGlobalSearch(false);
+      const searchData = await getSearchedUsersByColumn(name, value);
+      setUsers(searchData);
     }
   };
 
