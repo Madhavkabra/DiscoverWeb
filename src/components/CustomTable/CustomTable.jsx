@@ -15,10 +15,8 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import LightModeIcon from '@mui/icons-material/LightMode';
+
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { useTheme } from '@mui/material/styles';
 import {
   createColumnHelper,
   flexRender,
@@ -26,7 +24,6 @@ import {
   getCoreRowModel,
 } from '@tanstack/react-table';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { CreateThemeContext } from '../../contexts/muiThemeProvider';
 import {
   getGlobalSearchedUsers,
   getUsers,
@@ -38,8 +35,6 @@ import './CustomTable.css';
 const columnHelper = createColumnHelper();
 
 const CustomTable = () => {
-  const theme = useTheme();
-  const colorMode = React.useContext(CreateThemeContext);
   const [users, setUsers] = React.useState({ users: [], totalUsers: 0 });
   const [columnPinning, setColumnPinning] = React.useState({});
   const [order, setOrder] = React.useState('asc');
@@ -190,13 +185,7 @@ const CustomTable = () => {
           </InputAdornment>
         }
       />
-      <IconButton
-        sx={{ margin: '20px' }}
-        onClick={colorMode.toggleThemeMode}
-        variant='contained'
-      >
-        {theme.palette.mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
-      </IconButton>
+
       <TableContainer
         ref={tableContainerRef}
         onScroll={(e) => fetchMoreOnBottomReached(e.target)}
