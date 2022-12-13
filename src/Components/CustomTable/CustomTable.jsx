@@ -26,7 +26,7 @@ import {
   getCoreRowModel,
 } from '@tanstack/react-table';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { ColorModeContext } from '../../App';
+import { CreateThemeContext } from '../../contexts/muiThemeProvider';
 import {
   getGlobalSearchedUsers,
   getUsers,
@@ -39,7 +39,7 @@ const columnHelper = createColumnHelper();
 
 const CustomTable = () => {
   const theme = useTheme();
-  const colorMode = React.useContext(ColorModeContext);
+  const colorMode = React.useContext(CreateThemeContext);
   const [users, setUsers] = React.useState({ users: [], totalUsers: 0 });
   const [columnPinning, setColumnPinning] = React.useState({});
   const [order, setOrder] = React.useState('asc');
@@ -192,7 +192,7 @@ const CustomTable = () => {
       />
       <IconButton
         sx={{ margin: '20px' }}
-        onClick={colorMode.toggleColorMode}
+        onClick={colorMode.toggleThemeMode}
         variant='contained'
       >
         {theme.palette.mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
